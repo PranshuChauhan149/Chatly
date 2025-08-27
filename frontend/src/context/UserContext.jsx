@@ -4,7 +4,7 @@ import { createContext, useState, useEffect } from "react";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const serverUrl = "http://localhost:5000";
+  const serverUrl = "https://chatly-1-wyd6.onrender.com";
   const [user, setUser] = useState(null);
   const [onlineUser,setOnlineUser] = useState([])
   const [allUser, setAllUser] = useState([]);
@@ -73,3 +73,4 @@ const {data} = await axios.get(serverUrl + "/api/auth/allUser",{withCredentials:
     </UserContext.Provider>
   );
 };
+
