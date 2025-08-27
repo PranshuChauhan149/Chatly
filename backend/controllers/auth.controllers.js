@@ -4,6 +4,12 @@ import uploadOnCloudinary from "../config/cloudinary.js";
 import { genToken } from "../config/token.js";
 import User from "../models/User.models.js";
 import bcrypt from "bcrypt";
+// controllers/auth.controller.js
+
+import uploadOnCloudinary from "../config/cloudinary.js";
+import { genToken } from "../config/token.js";
+import User from "../models/User.models.js";
+import bcrypt from "bcrypt";
 
 // ================= SIGNUP =================
 export const signup = async (req, res) => {
@@ -35,15 +41,15 @@ export const signup = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "Lax", // dev only
-      secure: false, // prod: true
+      sameSite: "none",  // ✅ cross-site allowed
+      secure: true,      // ✅ only on HTTPS
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(201).json({
       success: true,
       message: "Signup successful",
-      user: { ...user._doc, password: undefined }, // hide password
+      user: { ...user._doc, password: undefined },
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -82,8 +88,8 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "none",  // ✅
+      secure: true,      // ✅
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -105,8 +111,8 @@ export const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      sameSite: "none",  // ✅
+      secure: true,      // ✅
     });
 
     return res.json({ success: true, message: "Logout successful" });
@@ -118,6 +124,7 @@ export const logout = async (req, res) => {
     });
   }
 };
+
 
 // ================= PROFILE UPDATE =================
 export const profilePage = async (req, res) => {
@@ -189,3 +196,4 @@ export const AllUser = async (req,res) => {
       .json({ success: false, message: "Server error, please try again" });
   }
 };
+
