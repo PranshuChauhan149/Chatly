@@ -4,12 +4,6 @@ import uploadOnCloudinary from "../config/cloudinary.js";
 import { genToken } from "../config/token.js";
 import User from "../models/User.models.js";
 import bcrypt from "bcrypt";
-// controllers/auth.controller.js
-
-import uploadOnCloudinary from "../config/cloudinary.js";
-import { genToken } from "../config/token.js";
-import User from "../models/User.models.js";
-import bcrypt from "bcrypt";
 
 // ================= SIGNUP =================
 export const signup = async (req, res) => {
@@ -49,7 +43,7 @@ export const signup = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Signup successful",
-      user: { ...user._doc, password: undefined },
+      user: { ...user._doc, password: undefined }, // hide password
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -86,10 +80,10 @@ export const login = async (req, res) => {
 
     const token = await genToken(user._id);
 
-    res.cookie("token", token, {
+     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "none",  // ✅
-      secure: true,      // ✅
+      sameSite: "none",  // ✅ cross-site allowed
+      secure: true,      // ✅ only on HTTPS
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -109,7 +103,7 @@ export const login = async (req, res) => {
 // ================= LOGOUT =================
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("token", {
+     res.clearCookie("token", {
       httpOnly: true,
       sameSite: "none",  // ✅
       secure: true,      // ✅
@@ -124,7 +118,6 @@ export const logout = async (req, res) => {
     });
   }
 };
-
 
 // ================= PROFILE UPDATE =================
 export const profilePage = async (req, res) => {
@@ -182,10 +175,12 @@ export const currentUser = async (req, res) => {
   }
 };
 
-export const AllUser = async (req,res) => {
+export const AllUser = async (req, res) => {
   try {
-    const userId = req.userId
-    const allUser = await User.find({_id : {$ne : userId} }).select("-password");
+    const userId = req.userId;
+    const allUser = await User.find({ _id: { $ne: userId } }).select(
+      "-password"
+    );
     if (allUser) {
       res.json({ success: true, allUser });
     }
@@ -196,4 +191,3 @@ export const AllUser = async (req,res) => {
       .json({ success: false, message: "Server error, please try again" });
   }
 };
-
