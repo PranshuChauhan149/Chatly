@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://chatly-self.vercel.app",
     credentials: true,
   })
 );
@@ -30,3 +30,4 @@ server.listen(PORT, async () => {
   await connectDb();
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
+
